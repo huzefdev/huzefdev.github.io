@@ -38,8 +38,15 @@ async function initStore() {
     storeData = await res.json();
     renderAll();
 
-    // Background silent sync with GitHub API
-    await syncFullGitHubEcosystem();
+    // Only hit GitHub API if cache is older than 2 hours (GitHub Action already keeps apps.json fresh)
+    const lastSync = Number(localStorage.getItem("huzef_last_sync_ts") || 0);
+    const twoHours = 2 * 60 * 60 * 1000;
+    if (Date.now() - lastSync > twoHours) {
+      await syncFullGitHubEcosystem();
+    } else {
+      const pill = document.getElementById("apiStatusPill");
+      if (pill) pill.textContent = "Instant CDN ●";
+    }
   } catch (err) {
     console.error('Store init error:', err);
   }
@@ -123,6 +130,7 @@ async function syncFullGitHubEcosystem() {
     }));
 
     localStorage.setItem('huzef_store_cache_v1', JSON.stringify({ liveMeta, githubRepos }));
+    localStorage.setItem("huzef_last_sync_ts", String(Date.now()));
     if (pill) pill.textContent = 'Auto-Synced ●';
   } catch {
     if (pill) pill.textContent = 'Offline Ready ●';
