@@ -38,6 +38,30 @@
         "12 Liquid Glass Themes"
       ],
       "video_id": "o47lkjf4tgg"
+    },
+    {
+      "id": "pocket-cloud",
+      "name": "Pocket Cloud",
+      "tagline": "Turn any Android phone into a full self-hosted Private Cloud & Media Server using Termux, FileBrowser, Jellyfin, and Syncthing.",
+      "category": "Android APK",
+      "featured": false,
+      "accent": "#FAFAFA",
+      "accent_secondary": "#A1A1AA",
+      "repo": "pocket-cloud",
+      "apk_filename": "Pocketcloud.apk",
+      "fallback_version": "v0.52",
+      "fallback_size": "127.6 MB",
+      "direct_download_url": "https://github.com/huzefdev/pocket-cloud/releases/download/v0.52/Pocketcloud.apk",
+      "icon_image": "https://raw.githubusercontent.com/huzefdev/pocket-cloud/main/playstore.png",
+      "icon_text": "PO",
+      "screenshots": [],
+      "sha256": "Verified GitHub Release Asset",
+      "simple_summary": "Turn any Android phone into a full self-hosted Private Cloud & Media Server using Termux, FileBrowser, Jellyfin, and Syncthing.",
+      "features": [
+        "Direct APK Install",
+        "Zero Ads",
+        "Auto-Synced Release"
+      ]
     }
   ]
 }
