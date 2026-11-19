@@ -940,45 +940,47 @@ html, body {
 
 .hidden { display: none !important; }
 
-/* STAY CONNECTED GLASS CARDS */
+/* STAY CONNECTED LIQUID GLASS PILL BUTTONS */
 .social-glass-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .social-glass-card {
-  display: flex;
+  flex: 1 1 200px;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 13px 15px;
-  border-radius: 16px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-top-color: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  text-decoration: none;
-  color: var(--text-primary);
-  transition: transform 0.22s var(--ease-spring), background 0.2s ease, border-color 0.2s ease;
+  gap: 11px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(24, 24, 27, 0.65) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  text-decoration: none !important;
+  color: #FAFAFA !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease;
   will-change: transform;
 }
 .social-glass-card:hover {
   transform: translate3d(0, -2px, 0);
-  background: var(--glass-bg-hover);
-  border-color: var(--glass-specular);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(32, 32, 36, 0.78) 100%);
+  border-color: rgba(255, 255, 255, 0.32);
 }
 .social-glass-card:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 .social-icon-wrap {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--glass-border);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   display: grid;
   place-items: center;
-  color: var(--text-primary);
+  color: #FAFAFA;
   flex-shrink: 0;
 }
 .social-meta {
@@ -989,6 +991,7 @@ html, body {
   display: block;
   font-size: 13px;
   font-weight: 600;
+  color: #FAFAFA;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -996,15 +999,15 @@ html, body {
 .social-meta span {
   display: block;
   font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 10px;
+  color: #A1A1AA;
 }
 .social-arrow {
-  font-size: 14px;
-  color: var(--text-muted);
-  transition: transform 0.2s var(--ease-spring), color 0.2s ease;
+  font-size: 13px;
+  color: #A1A1AA;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
 }
 .social-glass-card:hover .social-arrow {
   transform: translate3d(2px, -2px, 0);
-  color: var(--text-primary);
+  color: #FAFAFA;
 }
