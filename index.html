@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#05070B" />
+  <title>Huzef Store — Official Apps & Software Hub</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+
+  <!-- TOP GLASS NAVBAR (Desktop & Mobile) -->
+  <header class="glass-navbar">
+    <div class="nav-inner">
+      <div class="brand-cluster" onclick="switchTab('home')">
+        <div class="brand-logo">H</div>
+        <div>
+          <span class="brand-name">Huzef Store</span>
+          <span class="brand-tag">OFFICIAL APP HUB</span>
+        </div>
+      </div>
+
+      <!-- Desktop Menu Links -->
+      <nav class="desktop-menu">
+        <button class="menu-link active" data-tab="home">Home</button>
+        <button class="menu-link" data-tab="library">All Apps</button>
+        <button class="menu-link" data-tab="updates">Updates & Guide</button>
+        <button class="menu-link" data-tab="about">About Huzef</button>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="desktop-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input id="desktopSearchInput" type="search" placeholder="Search apps..." autocomplete="off" />
+        </div>
+        <button id="pwaInstallBtn" class="install-store-pill hidden">Install App</button>
+        <a href="https://github.com/huzefdev" target="_blank" rel="noopener" class="github-profile-pill" title="GitHub @huzefdev">
+          <img src="images/hero.png" alt="Huzef" onerror="this.style.display='none'" />
+          <span>@huzefdev</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Search Drawer -->
+  <div id="mobileSearchWrap" class="mobile-search-wrap hidden">
+    <div class="search-glass">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="mobileSearchInput" type="search" placeholder="Search PocketCloud, FUSON..." autocomplete="off" />
+      <button id="clearSearchBtn" class="clear-btn hidden">✕</button>
+    </div>
+  </div>
+
+  <!-- MAIN RESPONSIVE CONTAINER -->
+  <main class="main-container">
+
+    <!-- TAB 1: HOME -->
+    <section id="view-home" class="tab-view active">
+      <!-- Split Hero Spotlight (Desktop: 2-Column Wide | Mobile: Stacked Card) -->
+      <div class="hero-spotlight">
+        <div class="hero-left">
+          <span class="hero-badge" id="heroBadge">FEATURED • v0.52 • 28.4 MB</span>
+          <h1 class="hero-title" id="heroTitle">PocketCloud</h1>
+          <p class="hero-desc" id="heroSub">Turn your Android phone into a private, zero-trust cloud & media server</p>
+
+          <div class="hero-cta-row">
+            <button id="heroInstallBtn" class="liquid-cta">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+              <span>Download APK</span>
+            </button>
+            <button id="heroDetailsBtn" class="liquid-secondary">App Preview & Info</button>
+          </div>
+
+          <div class="trust-strip">
+            <span>✓ 100% Free & Open-Source</span>
+            <span>✓ Direct GitHub CDN</span>
+            <span>✓ SHA-256 Verified</span>
+          </div>
+          <div id="heroDots" class="hero-dots"></div>
+        </div>
+
+        <!-- Play Store Style Screenshot Strip inside Hero -->
+        <div class="hero-right">
+          <div class="preview-header">
+            <span class="mono-tag">LIVE APP PREVIEW GALLERY</span>
+            <span class="mono-tag" style="color:var(--emerald);">TAP TO ZOOM</span>
+          </div>
+          <div id="heroGalleryStrip" class="hero-gallery-strip"></div>
+        </div>
+      </div>
+
+      <!-- Ecosystem Quick Row -->
+      <div class="section-block">
+        <div class="section-head">
+          <h2>All Applications</h2>
+          <button class="text-link" onclick="switchTab('library')">Browse Full Library ›</button>
+        </div>
+        <div id="homeAppsGrid" class="apps-grid"></div>
+      </div>
+
+      <!-- Simple 3-Step Non-Technical Install Strip -->
+      <div class="simple-guide-card">
+        <div>
+          <span class="mono-tag" style="color:var(--emerald);">EASY INSTALLATION</span>
+          <h3>New to installing APKs? It takes 10 seconds.</h3>
+          <p>Every app here is directly compiled and signed by Shaikh Huzef. No ads, no middleman links.</p>
+        </div>
+        <div class="steps-row">
+          <div class="step-box"><b>1</b><span>Tap <strong>Download APK</strong> on any app</span></div>
+          <div class="step-box"><b>2</b><span>Open file & allow <strong>Unknown Apps</strong></span></div>
+          <div class="step-box"><b>3</b><span>Tap <strong>Install</strong> and enjoy</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: LIBRARY (ALL APPS + CATEGORY FILTERS) -->
+    <section id="view-library" class="tab-view hidden">
+      <div class="library-header">
+        <div>
+          <h2>App Library</h2>
+          <p style="color:var(--text-secondary);font-size:13px;">Automatically synced with GitHub Releases</p>
+        </div>
+        <span id="apiStatusPill" class="status-pill">Live GitHub CDN ●</span>
+      </div>
+
+      <div class="category-chips">
+        <button class="cat-chip active" data-cat="All">All Apps</button>
+        <button class="cat-chip" data-cat="Cloud & Infra">Cloud & Infra</button>
+        <button class="cat-chip" data-cat="Browsers & AI">Browsers & AI</button>
+        <button class="cat-chip" data-cat="Dev Tools">Dev Tools</button>
+        <button class="cat-chip" data-cat="Games & 3D">Games & 3D</button>
+      </div>
+
+      <div id="libraryGrid" class="apps-grid"></div>
+    </section>
+
+    <!-- TAB 3: UPDATES & CHANGELOG -->
+    <section id="view-updates" class="tab-view hidden">
+      <div class="library-header">
+        <div>
+          <h2>Live Release Feed</h2>
+          <p style="color:var(--text-secondary);font-size:13px;">Real-time version & build status from @huzefdev</p>
+        </div>
+        <button id="refreshApiBtn" class="liquid-secondary">Refresh Now ↻</button>
+      </div>
+      <div id="changelogFeed" class="changelog-grid"></div>
+    </section>
+
+    <!-- TAB 4: ABOUT HUZEF (BUILDER PROFILE + GITHUB REPOS) -->
+    <section id="view-about" class="tab-view hidden">
+      <div class="about-hero-card">
+        <img src="images/hero.png" alt="Shaikh Huzef Hanif" class="about-avatar" />
+        <div class="about-info">
+          <span class="hero-badge">CREATOR & SYSTEMS ENGINEER</span>
+          <h2>Shaikh Huzef Hanif</h2>
+          <p class="about-bio">
+            Systems & Software Engineer and Indie App Developer. I build bare-metal, local-first, zero-cost software, private cloud nodes, and native Android ecosystems directly on mobile hardware—without heavy cloud servers or paid subscriptions.
+          </p>
+          <div class="about-tags">
+            <span>ARM64 Android</span>
+            <span>Java / C++ / Python</span>
+            <span>Zero-Trust Cloud</span>
+            <span>WebGL & 3D Engines</span>
+            <span>Local LLMs</span>
+          </div>
+          <div class="about-links">
+            <a href="https://github.com/huzefdev" target="_blank" rel="noopener" class="liquid-cta" style="text-decoration:none;">GitHub Profile (@huzefdev) ↗</a>
+            <button class="liquid-secondary" onclick="switchTab('library')">Explore Apps</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-head">
+          <h2>Live GitHub Repositories</h2>
+          <span class="mono-tag">AUTO-FETCHED FROM GITHUB API</span>
+        </div>
+        <div id="githubReposGrid" class="repos-grid"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM FLOATING LIQUID GLASS DOCK -->
+  <nav class="mobile-dock-wrap">
+    <div class="liquid-dock">
+      <button class="dock-item active" data-tab="home">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L4 9v12h5v-7h6v7h5V9l-8-6z"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="dock-item" data-tab="library">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+        <span>Apps</span>
+      </button>
+      <button class="dock-item" data-tab="updates">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4"/></svg>
+        <span>Updates</span>
+      </button>
+      <button class="dock-item" data-tab="about">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 6-5 8-5s6.5 1 8 5"/></svg>
+        <span>Huzef</span>
+      </button>
+    </div>
+    <button id="dockSearchBtn" class="liquid-search-orb" aria-label="Search">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="11" cy="11" r="7.5"/><path d="M20.5 20.5l-4.2-4.2"/></svg>
+    </button>
+  </nav>
+
+  <!-- PLAY STORE STYLE APP DETAIL MODAL -->
+  <div id="appModal" class="modal-backdrop hidden">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <button id="closeModalBtn" class="modal-close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN SCREENSHOT LIGHTBOX -->
+  <div id="lightboxModal" class="lightbox-backdrop hidden" onclick="closeLightbox()">
+    <button class="lightbox-close">✕</button>
+    <img id="lightboxImg" src="" alt="App Screenshot Preview" />
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

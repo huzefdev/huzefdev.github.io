@@ -1,0 +1,43 @@
+{
+  "store": {
+    "name": "Huzef Store",
+    "handle": "@huzefdev",
+    "github_user": "huzefdev",
+    "developer_name": "Shaikh Huzef Hanif",
+    "developer_avatar": "images/hero.png"
+  },
+  "apps": [
+    {
+      "id": "pocketcloud",
+      "name": "PocketCloud",
+      "tagline": "Turn your Android phone into a private, zero-trust cloud & media server",
+      "category": "Cloud & Media",
+      "featured": true,
+      "accent": "#00F5A0",
+      "accent_secondary": "#38BDF8",
+      "repo": "Pocket-cloud",
+      "apk_filename": "PocketCloud-arm64.apk",
+      "fallback_version": "v0.52",
+      "fallback_size": "28.4 MB",
+      "icon_image": "images/playstore.png",
+      "icon_text": "PC",
+      "screenshots": [
+        "images/appimages/IMG_20261119_09514996.jpeg",
+        "images/appimages/IMG_20261119_09515530.jpeg",
+        "images/appimages/IMG_20261119_09521618.jpeg",
+        "images/appimages/IMG_20261119_09523723.jpeg"
+      ],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "simple_summary": "Host your own private cloud directly on Android\u2014no root, no monthly fees. Includes FileBrowser, Jellyfin Cinema Server, Syncthing, and biometric fingerprint encryption.",
+      "features": [
+        "No Root / No Docker Required",
+        "FileBrowser + Jellyfin + Syncthing",
+        "AES-256-GCM Hardware Keystore",
+        "Biometric Fingerprint Vault",
+        "Scoped Guest QR Passes",
+        "12 Liquid Glass Themes"
+      ],
+      "video_id": "o47lkjf4tgg"
+    }
+  ]
+}
