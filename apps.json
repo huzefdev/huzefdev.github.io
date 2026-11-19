@@ -15,7 +15,7 @@
       "featured": true,
       "accent": "#00F5A0",
       "accent_secondary": "#38BDF8",
-      "repo": "PocketCloud",
+      "repo": "pocket-cloud",
       "apk_filename": "PocketCloud-v0.52.apk",
       "fallback_version": "v0.52",
       "fallback_size": "127.6 MB",
