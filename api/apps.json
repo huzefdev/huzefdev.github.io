@@ -16,9 +16,9 @@
       "accent": "#00F5A0",
       "accent_secondary": "#38BDF8",
       "repo": "pocket-cloud",
-      "apk_filename": "PocketCloud-v0.52.apk",
+      "apk_filename": "Pocketcloud.apk",
       "fallback_version": "v0.52",
-      "fallback_size": "127.6 MB",
+      "fallback_size": "128.0 MB",
       "icon_image": "images/playstore.png",
       "icon_text": "PC",
       "screenshots": [
@@ -27,7 +27,7 @@
         "images/appimages/IMG_20261119_09521618.jpeg",
         "images/appimages/IMG_20261119_09523723.jpeg"
       ],
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "12bcc99f33693c5bdad6183160f2a22401ec8ccc2ead6f06bcf9ab6bda6043b7",
       "simple_summary": "Host your own private cloud directly on Android\u2014no root, no monthly fees. Includes FileBrowser, Jellyfin Cinema Server, Syncthing, and biometric fingerprint encryption.",
       "features": [
         "No Root / No Docker Required",
@@ -37,7 +37,8 @@
         "Scoped Guest QR Passes",
         "12 Liquid Glass Themes"
       ],
-      "video_id": "o47lkjf4tgg"
+      "video_id": "o47lkjf4tgg",
+      "direct_download_url": "https://github.com/huzefdev/pocket-cloud/releases/download/v0.52/Pocketcloud.apk"
     },
     {
       "id": "pocket-cloud",

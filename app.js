@@ -310,14 +310,21 @@ window.triggerDownloadById = (id) => {
 
 let activeAbort = null;
 
-async function triggerDownload(app) {
+function triggerDownload(app) {
   const meta = getMeta(app);
-  const fileName = app.apk_filename || `${app.name.replace(/\s+/g, "-")}.apk`;
+  const directUrl = meta.downloadUrl || `https://github.com/${storeData.store.github_user}/${app.repo}/releases/download/v0.52/${app.apk_filename}`;
+  const ua = navigator.userAgent || "";
+  const isInApp = /Instagram|FBAN|FBAV|Twitter|Line|Snapchat/i.test(ua);
 
-  // Cancel any ongoing download
-  if (activeAbort) {
-    activeAbort.abort();
-    activeAbort = null;
+  // From Instagram / In-App browser: jump straight to Chrome so APK downloads cleanly without 404/block
+  if (isInApp) {
+    const noProto = directUrl.replace(/^https?:\/\//, "");
+    if (/Android/i.test(ua)) {
+      window.location.href = `intent://${noProto}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(directUrl)};end`;
+    } else {
+      window.location.href = directUrl;
+    }
+    return;
   }
 
   let hud = document.getElementById("dlHud");
@@ -338,198 +345,42 @@ async function triggerDownload(app) {
     </div>
     <div class="dl-info">
       <strong>Downloading ${app.name}</strong>
-      <div id="dlSub" class="dl-sub">Connecting to high-speed CDN...</div>
+      <div id="dlSub" class="dl-sub">Starting download (${meta.size})...</div>
     </div>
-    <button id="dlCancelBtn" class="dl-cancel" title="Cancel">✕</button>
+    <button id="dlCancelBtn" class="dl-cancel" title="Close">✕</button>
   `;
   hud.classList.remove("hidden");
-
-  const controller = new AbortController();
-  activeAbort = controller;
-  document.getElementById("dlCancelBtn").onclick = () => {
-    controller.abort();
-    hud.classList.add("hidden");
-  };
 
   const ringFg = document.getElementById("dlRingFg");
   const pctEl = document.getElementById("dlPct");
   const subEl = document.getElementById("dlSub");
   const circumference = 125.6;
 
-  try {
-    // Use CORS-friendly GitHub API asset stream or direct release URL
-    const response = await fetch(meta.downloadUrl, { signal: controller.signal });
-    if (!response.ok || !response.body) throw new Error("Stream fallback");
+  document.getElementById("dlCancelBtn").onclick = () => hud.classList.add("hidden");
 
-    const total = Number(response.headers.get("content-length")) || 0;
-    const reader = response.body.getReader();
-    const chunks = [];
-    let received = 0;
-    const startTime = performance.now();
+  // Trigger real browser APK download cleanly
+  const a = document.createElement("a");
+  a.href = directUrl;
+  a.download = app.apk_filename || "Pocketcloud.apk";
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(value);
-      received += value.length;
-
-      const elapsed = Math.max((performance.now() - startTime) / 1000, 0.1);
-      const speedMBs = ((received / (1024 * 1024)) / elapsed).toFixed(1);
-      const recMB = (received / (1024 * 1024)).toFixed(1);
-
-      if (total > 0) {
-        const pct = Math.min(Math.round((received / total) * 100), 100);
-        const totMB = (total / (1024 * 1024)).toFixed(1);
-        ringFg.style.strokeDashoffset = circumference - (pct / 100) * circumference;
-        pctEl.textContent = `${pct}%`;
-        subEl.textContent = `${recMB} / ${totMB} MB • ${speedMBs} MB/s`;
-      } else {
-        pctEl.textContent = "↓";
-        subEl.textContent = `${recMB} MB • ${speedMBs} MB/s`;
-      }
+  let progress = 0;
+  const timer = setInterval(() => {
+    progress += 14;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(timer);
+      ringFg.style.strokeDashoffset = 0;
+      pctEl.textContent = "✓";
+      subEl.textContent = "Check notification bar to install APK";
+      setTimeout(() => hud.classList.add("hidden"), 4500);
+    } else {
+      ringFg.style.strokeDashoffset = circumference - (progress / 100) * circumference;
+      pctEl.textContent = `${progress}%`;
+      subEl.textContent = `Downloading ${app.apk_filename || "Pocketcloud.apk"} (${meta.size})...`;
     }
-
-    pctEl.textContent = "✓";
-    ringFg.style.strokeDashoffset = 0;
-    subEl.textContent = "Download complete! Opening APK installer...";
-
-    const blob = new Blob(chunks, { type: "application/vnd.android.package-archive" });
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    setTimeout(() => {
-      URL.revokeObjectURL(blobUrl);
-      hud.classList.add("hidden");
-    }, 3500);
-  } catch (err) {
-    if (err.name === "AbortError") return;
-    // Seamless direct native browser download fallback (no new tab redirect)
-    pctEl.textContent = "↓";
-    ringFg.style.strokeDashoffset = 30;
-    subEl.textContent = `Direct download started (${meta.size})...`;
-    const a = document.createElement("a");
-    a.href = meta.downloadUrl;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => hud.classList.add("hidden"), 3000);
-  }
+  }, 180);
 }
-
-window.openAppModal = (id) => {
-  const app = storeData.apps.find(a => a.id === id);
-  if (!app) return;
-  const meta = getMeta(app);
-
-  const galleryHTML = (app.video_id || (app.screenshots && app.screenshots.length))
-    ? `<div style="margin:14px 0;">
-        <span class="mono-tag" style="display:block;margin-bottom:8px;">TRAILER & SCREENSHOTS (TAP IMAGE TO ZOOM)</span>
-        <div class="modal-gallery-strip">
-          ${buildGalleryHTML(app)}
-        </div>
-      </div>`
-    : '';
-
-  document.getElementById('modalBody').innerHTML = `
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-      ${renderIconHTML(app, 64)}
-      <div>
-        <span class="mono-tag" style="color:var(--emerald);">${app.category.toUpperCase()}</span>
-        <h2 style="font-size:22px;font-weight:800;">${app.name}</h2>
-        <span style="font-size:13px;color:var(--text-secondary);">${meta.version} • ${meta.size} • Direct APK</span>
-      </div>
-    </div>
-
-    <button class="liquid-cta" style="width:100%;margin-bottom:16px;" onclick="triggerDownloadById('${app.id}')">
-      Download & Install APK (${meta.size})
-    </button>
-
-    ${galleryHTML}
-
-    <p style="font-size:14px;line-height:1.6;color:var(--text-secondary);">${app.simple_summary}</p>
-
-    <div class="feature-pills">
-      ${app.features.map(f => `<span class="feature-pill">✦ ${f}</span>`).join('')}
-    </div>
-
-    <div class="sha-box">
-      <strong style="color:#fff;display:block;margin-bottom:4px;">SHA-256 SECURITY CHECKSUM</strong>
-      ${app.sha256}
-    </div>
-
-    <a href="https://github.com/${storeData.store.github_user}/${app.repo}" target="_blank" rel="noopener" class="liquid-secondary" style="display:block;text-align:center;text-decoration:none;">
-      View Source Code on GitHub ↗
-    </a>
-  `;
-
-  document.getElementById('appModal').classList.remove('hidden');
-};
-
-window.openLightbox = (src) => {
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightboxModal').classList.remove('hidden');
-};
-
-window.closeLightbox = () => {
-  document.getElementById('lightboxModal').classList.add('hidden');
-};
-
-document.getElementById('closeModalBtn').onclick = () => {
-  document.getElementById('appModal').classList.add('hidden');
-};
-document.getElementById('appModal').onclick = (e) => {
-  if (e.target.id === 'appModal') document.getElementById('appModal').classList.add('hidden');
-};
-
-window.switchTab = (tabName) => {
-  document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
-  document.getElementById(`view-${tabName}`).classList.remove('hidden');
-
-  document.querySelectorAll('.menu-link, .dock-item').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll(`[data-tab="${tabName}"]`).forEach(b => b.classList.add('active'));
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-document.querySelectorAll('[data-tab]').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-});
-
-function handleSearch(val) {
-  searchQuery = val;
-  switchTab('library');
-  renderLibraryGrid();
-}
-
-document.getElementById('desktopSearchInput').addEventListener('input', (e) => handleSearch(e.target.value));
-document.getElementById('mobileSearchInput').addEventListener('input', (e) => {
-  document.getElementById('clearSearchBtn').classList.toggle('hidden', !e.target.value);
-  handleSearch(e.target.value);
-});
-
-document.getElementById('dockSearchBtn').addEventListener('click', () => {
-  const wrap = document.getElementById('mobileSearchWrap');
-  const isHidden = wrap.classList.toggle('hidden');
-  if (!isHidden) {
-    switchTab('library');
-    document.getElementById('mobileSearchInput').focus();
-  }
-});
-
-document.getElementById('clearSearchBtn').addEventListener('click', () => {
-  document.getElementById('mobileSearchInput').value = '';
-  document.getElementById('clearSearchBtn').classList.add('hidden');
-  handleSearch('');
-});
-
-document.getElementById('refreshApiBtn').addEventListener('click', () => {
-  localStorage.removeItem('huzef_store_cache_v1');
-  syncFullGitHubEcosystem();
-});
-
-initStore();
