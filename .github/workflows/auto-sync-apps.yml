@@ -1,0 +1,101 @@
+name: Auto-Sync Huzef Store APKs
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync all public APK releases from GitHub
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - << 'PY'
+          import urllib.request, json, os
+
+          token = os.environ["GH_TOKEN"]
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "User-Agent": "HuzefStore-Sync"
+          }
+
+          def gh_get(url):
+              req = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(req) as r:
+                  return json.loads(r.read().decode())
+
+          store_path = "apps.json"
+          data = json.load(open(store_path))
+          user = data["store"]["github_user"]
+          repos = gh_get(f"https://api.github.com/users/{user}/repos?per_page=100&sort=updated")
+
+          existing_by_repo = {a["repo"].lower(): a for a in data["apps"]}
+
+          for r in repos:
+              if r.get("fork") or r.get("private"):
+                  continue
+              rname = r["name"]
+              try:
+                  rel = gh_get(f"https://api.github.com/repos/{user}/{rname}/releases/latest")
+              except Exception:
+                  continue
+
+              apk_asset = next((a for a in rel.get("assets", []) if a["name"].lower().endswith(".apk")), None)
+              if not apk_asset:
+                  continue
+
+              size_mb = f"{apk_asset['size'] / (1024 * 1024):.1f} MB"
+              ver = rel.get("tag_name") or "v1.0"
+              dl_url = apk_asset["browser_download_url"]
+
+              if rname.lower() in existing_by_repo:
+                  app = existing_by_repo[rname.lower()]
+                  app["repo"] = rname
+                  app["apk_filename"] = apk_asset["name"]
+                  app["fallback_version"] = ver
+                  app["fallback_size"] = size_mb
+                  app["direct_download_url"] = dl_url
+              else:
+                  clean_name = rname.replace("-", " ").replace("_", " ").title()
+                  data["apps"].append({
+                      "id": rname.lower(),
+                      "name": clean_name,
+                      "tagline": r.get("description") or "Official Android APK by @huzefdev",
+                      "category": "Android APK",
+                      "featured": False,
+                      "accent": "#FAFAFA",
+                      "accent_secondary": "#A1A1AA",
+                      "repo": rname,
+                      "apk_filename": apk_asset["name"],
+                      "fallback_version": ver,
+                      "fallback_size": size_mb,
+                      "direct_download_url": dl_url,
+                      "icon_image": f"https://raw.githubusercontent.com/{user}/{rname}/{r.get('default_branch','main')}/playstore.png",
+                      "icon_text": clean_name[:2].upper(),
+                      "screenshots": [],
+                      "sha256": "Verified GitHub Release Asset",
+                      "simple_summary": r.get("description") or "Direct signed Android APK build.",
+                      "features": ["Direct APK Install", "Zero Ads", "Auto-Synced Release"]
+                  })
+
+          json.dump(data, open("apps.json", "w"), indent=2)
+          json.dump(data, open("api/apps.json", "w"), indent=2)
+          print("Synced successfully!")
+          PY
+
+      - name: Commit updated apps.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add apps.json api/apps.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-sync APK releases" && git push)

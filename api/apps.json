@@ -15,10 +15,10 @@
       "featured": true,
       "accent": "#00F5A0",
       "accent_secondary": "#38BDF8",
-      "repo": "Pocket-cloud",
-      "apk_filename": "PocketCloud-arm64.apk",
+      "repo": "PocketCloud",
+      "apk_filename": "PocketCloud-v0.52.apk",
       "fallback_version": "v0.52",
-      "fallback_size": "28.4 MB",
+      "fallback_size": "127.6 MB",
       "icon_image": "images/playstore.png",
       "icon_text": "PC",
       "screenshots": [

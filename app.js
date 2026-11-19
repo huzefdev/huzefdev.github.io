@@ -135,7 +135,7 @@ function getMeta(app) {
   return liveMeta[app.id] || {
     version: app.fallback_version,
     size: app.fallback_size,
-    downloadUrl: `https://github.com/${storeData.store.github_user}/${app.repo}/releases/latest/download/${app.apk_filename}`,
+    downloadUrl: app.direct_download_url || `https://github.com/${storeData.store.github_user}/${app.repo}/releases/latest/download/${app.apk_filename}`,
     notes: app.simple_summary,
     publishedAt: 'Verified'
   };
