@@ -34,7 +34,7 @@ async function initStore() {
       githubRepos = parsed.githubRepos || [];
     }
 
-    const res = await fetch('apps.json?t=' + Date.now());
+    const res = await fetch('apps.json?v=8&t=' + Date.now());
     storeData = await res.json();
     renderAll();
 

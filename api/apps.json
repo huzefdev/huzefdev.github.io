@@ -13,12 +13,14 @@
       "tagline": "Turn your Android phone into a private, zero-trust cloud & media server",
       "category": "Cloud & Media",
       "featured": true,
-      "accent": "#00F5A0",
-      "accent_secondary": "#38BDF8",
+      "accent": "#FAFAFA",
+      "accent_secondary": "#A1A1AA",
       "repo": "pocket-cloud",
       "apk_filename": "Pocketcloud.apk",
       "fallback_version": "v0.52",
       "fallback_size": "128.0 MB",
+      "direct_download_url": "https://github.com/huzefdev/pocket-cloud/releases/download/v0.52/Pocketcloud.apk",
+      "video_id": "o47lkjf4tgg",
       "icon_image": "images/playstore.png",
       "icon_text": "PC",
       "screenshots": [
@@ -36,32 +38,6 @@
         "Biometric Fingerprint Vault",
         "Scoped Guest QR Passes",
         "12 Liquid Glass Themes"
-      ],
-      "video_id": "o47lkjf4tgg",
-      "direct_download_url": "https://github.com/huzefdev/pocket-cloud/releases/download/v0.52/Pocketcloud.apk"
-    },
-    {
-      "id": "pocket-cloud",
-      "name": "Pocket Cloud",
-      "tagline": "Turn any Android phone into a full self-hosted Private Cloud & Media Server using Termux, FileBrowser, Jellyfin, and Syncthing.",
-      "category": "Android APK",
-      "featured": false,
-      "accent": "#FAFAFA",
-      "accent_secondary": "#A1A1AA",
-      "repo": "pocket-cloud",
-      "apk_filename": "Pocketcloud.apk",
-      "fallback_version": "v0.52",
-      "fallback_size": "127.6 MB",
-      "direct_download_url": "https://github.com/huzefdev/pocket-cloud/releases/download/v0.52/Pocketcloud.apk",
-      "icon_image": "https://raw.githubusercontent.com/huzefdev/pocket-cloud/main/playstore.png",
-      "icon_text": "PO",
-      "screenshots": [],
-      "sha256": "Verified GitHub Release Asset",
-      "simple_summary": "Turn any Android phone into a full self-hosted Private Cloud & Media Server using Termux, FileBrowser, Jellyfin, and Syncthing.",
-      "features": [
-        "Direct APK Install",
-        "Zero Ads",
-        "Auto-Synced Release"
       ]
     }
   ]
